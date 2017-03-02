@@ -11,10 +11,10 @@ jobs:
       image_resource:
         type: docker-image
         source: {repository: praqma/gh-pages}
-      inputs: 
+      inputs:
         - name: repository
         - name: gist
-      outputs: 
+      outputs:
         - name: site
       run:
         path: sh
@@ -27,35 +27,35 @@ jobs:
            git config --global user.name "praqma" && git add .
            git commit -m "updated gist"
     on_failure:
-      put: slack-alert 
+      put: slack-alert
       params:
-        channel: '#general'
+        channel: '@albert'
         text: |
-          The build failed. Please go correct it at: 
-          http://192.168.100.4:8080//teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          The build failed. Please go correct it at:
+          http://35.156.129.15//teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
           or at:
-          http://192.168.100.4:8080//builds/$BUILD_ID
+          http://35.156.129.15//builds/$BUILD_ID
   - put: gist
-    params: 
+    params:
       repository: site
 
 
 - name: test-site
   public: true
-  plan: 
+  plan:
   - get: repository
     passed: [build-jekyll]
     trigger: true
   - task: curl-site
-    config: 
+    config:
       platform: linux
-      image_resource: 
+      image_resource:
         type: docker-image
-        source: 
+        source:
           repository: praqma/gh-pages
-      run: 
+      run:
         path: sh
-        args: 
+        args:
         - -exc
         - |
           apt-get update
@@ -64,12 +64,12 @@ jobs:
     on_failure:
       put: slack-alert
       params:
-        channel: '#general'
+        channel: '@albert'
         text: |
           The build failed. Please go correct it at:
-          http://192.168.100.4:8080//teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          http://35.156.129.15//teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
           or at:
-          http://192.168.100.4:8080//builds/$BUILD_ID
+          http://35.156.129.15//builds/$BUILD_ID
   - task: link-checker
     config:
       platform: linux
@@ -85,12 +85,12 @@ jobs:
     on_failure:
       put: slack-alert
       params:
-        channel: '#general'
+        channel: '@albert'
         text: |
           The build failed. Please go correct it at:
-          http://192.168.100.4:8080//teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          http://35.156.129.15//teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
           or at:
-          http://192.168.100.4:8080//builds/$BUILD_ID
+          http://35.156.129.15//builds/$BUILD_ID
 - name: update-production-site
   public: true
   plan:
@@ -100,19 +100,19 @@ jobs:
     params:
       repository: repository
       force: true
-  
-resources: 
+
+resources:
 - name: repository
   type: git
   source:
-    uri: https://github.com/Sharor/concourse-workshop.git
+    uri: https://github.com/kvarak/concourse-workshop.git
     branch: master
     username: {{github-username}}
     password: {{github-password}}
 
 - name: gist
-  type: git 
-  source: 
+  type: git
+  source:
     uri: https://gist.github.com/4b2015849c31bfb860c6a021ba9ed63a.git
     branch: master
     username: {{github-username}}
@@ -120,8 +120,8 @@ resources:
 
 - name: github-pages
   type: git
-  source: 
-    uri: https://github.com/Sharor/concourse-workshop.git
+  source:
+    uri: https://github.com/kvarak/concourse-workshop.git
     branch: gh-pages
     username: {{github-username}}
     password: {{github-password}}
@@ -129,7 +129,7 @@ resources:
 - name: slack-alert
   type: slack-notification
   source:
-    url: https://hooks.slack.com/services/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
+    url: https://hooks.slack.com/services/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
 
 
 resource_types:
