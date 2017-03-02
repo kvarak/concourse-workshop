@@ -113,7 +113,7 @@ resources:
 - name: gist
   type: git
   source:
-    uri: https://gist.github.com/4b2015849c31bfb860c6a021ba9ed63a.git
+    uri: https://gist.github.com/kvarak/0ae6f3a99889baa554b4685656ef91a0
     branch: master
     username: {{github-username}}
     password: {{github-password}}
